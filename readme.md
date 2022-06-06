@@ -35,8 +35,8 @@ Das geht ggf. auch etwas eleganter.
 - Um SENEC2MQTT nun automatisch mit dem Systemd laufen zu lassen, muss in <code>/etc/systemd/system</code> eine Datei SENEC2MQTT.service angelegt werden.   
 Inhalt:  
 <code>
-[Unit]\
-Description=Senec to MQTT Bridge\
+[Unit]\ 
+Description=Senec to MQTT Bridge \
 Wants=network.target\
 After=network.target\ 
 [Service]  
