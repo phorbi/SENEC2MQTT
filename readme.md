@@ -3,6 +3,7 @@
 
 ### Vorbereitung
 - Ich habe mein FHEM auf einem debian Server (Raspian sollte gleich funktionieren)
+- Getestet habe ich das mit Python3.7 und 3.9, 3.4 geht NICHT
 - Ich betreibe einen Mosquitto Broker auf meinem FHEM Server nähere dazu findet ihr hier
 https://mosquitto.org/download/]https://mosquitto.org/download/
 - Auf dem Server habe ich Python3 installiert um die Skripte laufen zu lassen
