@@ -77,3 +77,8 @@ für eine Schnittstelle zu einer openWB habe ich eine SENEC2MQTT_openWB.py bridg
 SENEC2MQTT_openWB.py ersetzt dann SENEC2MQTT.py
 
 Für SENEC2MQTT_openWB.py muss alles wie oben mit der SENEC2MQTT bridge beschrieben gemacht werden. also Senec.py + SENEC2MQTT_openWB.py in /usr/bin/SENEC2MQTT legen, rechte vergeben. SENEC2MQTT.service anlegen, aber bei "ExecStart=" am Ende SENEC2MQTT_openWB.py eintragen. 
+
+### weitere Info
+es gab eine längere Diskussion hier:  
+https://forum.fhem.de/index.php/topic,107265.msg1221254.html#msg1221254  
+Wen es interessiert kann sicherlich hier noch mehr an Informationen ziehen.
