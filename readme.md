@@ -33,21 +33,21 @@ sudo chmod 777 /usr/bin/SENEC2MQTT/Senec.py
 sudo chmod 777 /usr/bin/SENEC2MQTT/SENEC2MQTT.py</code>  
 Das geht ggf. auch etwas eleganter.
 - Um SENEC2MQTT nun automatisch mit dem Systemd laufen zu lassen, muss in <code>/etc/systemd/system</code> eine Datei SENEC2MQTT.service angelegt werden.   
-Inhalt:<br>
-<code><br>
-[Unit]<br>  
-Description=Senec to MQTT Bridge<br>
-Wants=network.target<br>
-After=network.target<br>
-[Service]<br>
-Type=simple<br>
-User=[TRAGT HIER EUREN USER EIN]<br>
-Group=[TRAGT HIER DIE GRUPPE DES USERS EIN]<br>
-ExecStart=/usr/bin/python3 /usr/bin/SENEC2MQTT/SENEC2MQTT.py<br>
-Restart=always<br>
-RestartSec=3<br>
-[Install]<br>
-WantedBy=multi-user.target</code><br>
+Inhalt:<br />
+<code><br />
+[Unit]<br />  
+Description=Senec to MQTT Bridge<br />
+Wants=network.target<br />
+After=network.target<br />
+[Service]<br />
+Type=simple<br />
+User=[TRAGT HIER EUREN USER EIN]<br />
+Group=[TRAGT HIER DIE GRUPPE DES USERS EIN]<br />
+ExecStart=/usr/bin/python3 /usr/bin/SENEC2MQTT/SENEC2MQTT.py<br />
+Restart=always<br />
+RestartSec=3<br />
+[Install]<br />
+WantedBy=multi-user.target</code><br />
 
 Hinweis, in den Zeilen User und Group müsst ihr euren Linux oder Raspian user eintragen (also z.B. User=pi, Group=pi)
 
