@@ -68,7 +68,7 @@ Welche Topics verwendet werden findet Ihr in SENEC2MQTT.py ab Zeile 54
 Es werden standardmäßig alle 2 Sekunden die Daten vom SENEC geholt und auf den MQTT gepublisht.
 Auf dem Topic <code>Keller/Solar/control/SENEC2MQTTInterval</code> könnt ihr das Updateintervall einstellen.
 Ich empfehle Werte zwischen 1 und 30.  
-Das Skript akzeptiert nur INT werte zwischen 1-60, andere Inputs werden ignoriert 
+Das Skript ignoriert alles außer INT werte, Diese sind auf 1-60 limitiert (Werte kleiner 1 -> 1, Werte größer 60 -> 60) 
 wie immer auch hier: Benutzung auf eigene Gefahr.  
 Auf <code>Keller/Solar/UpdateIntervall</code> gibt der Dienst zurück, welches Intervall gerade verwendet wird.
 
