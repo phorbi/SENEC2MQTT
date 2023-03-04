@@ -27,8 +27,11 @@ def on_connect(client, userdata, flags, rc):  # The callback for when the client
 
 def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received from the server.
     if msg.topic == "Keller/Solar/control/SENEC2MQTTInterval":
-        q.put(int(msg.payload.decode("utf-8")))
-        print("Intervall vom MQTT: " + str(msg.payload.decode("utf-8")))
+        try:
+            q.put(int(msg.payload.decode("utf-8")))
+            print("Intervall vom MQTT: " + str(msg.payload.decode("utf-8")))
+        except:
+            print("not an int")
 
 client =mqtt.Client("SENEC-V3")
 client.on_connect = on_connect  # Define callback function for successful connection
@@ -47,6 +50,8 @@ while True:
 
     while not q.empty():
         intervall = q.get()
+        if intervall <= 1: intervall = 1
+        if intervall >= 60: intervall = 60
     try:
         #get Data from Senec
         data_dict = info.get_values()

@@ -68,7 +68,10 @@ class SenecAPI():
     def __substitute_system_state(self, data):
         system_state = data['STATISTIC']['CURRENT_STATE']
         #auskommentiert, bis die anzahl der Status bekannt ist:
-        #data['STATISTIC']['CURRENT_STATE'] = SYSTEM_STATE_NAME[system_state]
+        try:
+            data['STATISTIC']['CURRENT_STATE'] = SYSTEM_STATE_NAME[system_state]
+        except Exception:
+            pass
         return data
 
 BASIC_REQUEST = {
