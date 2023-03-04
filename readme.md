@@ -20,7 +20,7 @@ Es gibt zwei Pyhon Skripte.
 Senec.py hat den Ursprung hier:  
 https://inden.one/blog/2020/11/26/senec-python-library.html  
 Und dient dazu, ähnlich wie bei dem HTTPMod Modul die Daten über HTTP beim Speicher anzufragen. Ich habe es leicht modifiziert und meinen Bedürfnissen angepasst.
-Ich habe es aufgrund der aktuellen Abschaltung momentan außerdem etwas beschnitten, weil es Statuscodes gibt, die das Skript noch nicht kennt. Es sind wohl die Statuscodes 95 und 96 hinzugekommen. Die sind im Skript schon mal drin. Wenn das mit den Codes passt, kann man irgendwann einfach das "#" in Zeile 71 rausnehmen und das Decodieren des Statuscodes wieder aktiv machen.
+
 
 SENEC2MQTT.py sendet die vom Senec bekommenen Daten auf dem MQTT Broker.
 MQTT Broker, sowie SENEC Adresse müssen dort zunächst entsprechend in Zeile 20-23 vorkonfiguriert werden.
@@ -68,8 +68,8 @@ Welche Topics verwendet werden findet Ihr in SENEC2MQTT.py ab Zeile 54
 Es werden standardmäßig alle 2 Sekunden die Daten vom SENEC geholt und auf den MQTT gepublisht.
 Auf dem Topic <code>Keller/Solar/control/SENEC2MQTTInterval</code> könnt ihr das Updateintervall einstellen.
 Ich empfehle Werte zwischen 1 und 30.  
-**ACHTUNG**: Ich habe hier keine Fehlerbehandlung drin. Ich habe auch nie getestet was mit Werten <1 oder >30 oder gar nichtnumerischen Daten passiert.
-Also wie immer auch hier: Benutzung auf eigene Gefahr.  
+Das Skript akzeptiert nur INT werte zwischen 1-60, andere Inputs werden ignoriert 
+wie immer auch hier: Benutzung auf eigene Gefahr.  
 Auf <code>Keller/Solar/UpdateIntervall</code> gibt der Dienst zurück, welches Intervall gerade verwendet wird.
 
 ### openWB
