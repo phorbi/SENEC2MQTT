@@ -12,6 +12,9 @@ Kudos:
 import requests
 import struct
 
+requests.packages.urllib3.disable_warnings(
+    requests.packages.urllib3.exceptions.InsecureRequestWarning)
+
 __author__ = "Nicolas Inden"
 __copyright__ = "Copyright 2020, Nicolas Inden"
 __credits__ = ["Nicolas Inden", "Mikołaj Chwalisz"]
@@ -25,19 +28,21 @@ class SenecAPI():
 
     def __init__(self, device_ip):
         self.device_ip = device_ip
-        self.read_api  = f"http://{device_ip}/lala.cgi"
+        self.read_api  = f"https://{device_ip}/lala.cgi"
 
     def get_values(self):
-        response = requests.post(self.read_api, json=BASIC_REQUEST)
+        response = requests.post(self.read_api, json=BASIC_REQUEST, verify=False)
         if response.status_code == 200:
+            #return self.__decode_data(response.json())
             res = self.__decode_data(response.json())
+            #print(res)
             return self.__substitute_system_state(res)
         else:
             return {"msg": f"Status code {response.status_code}"}
 
     def get_all_values(self):
         request_json = {"STATISTIC": {},"ENERGY": {},"FEATURES": {},"LOG": {},"SYS_UPDATE": {},"WIZARD": {},"BMS": {},"BAT1": {},"BAT1OBJ1": {},"BAT1OBJ2": {},"BAT1OBJ3": {},"BAT1OBJ4": {},"PWR_UNIT": {},"PV1": {},"FACTORY": {},"GRIDCONFIG": {}}
-        response = requests.post(self.read_api, json=request_json)
+        response = requests.post(self.read_api, json=request_json, verify=False)
         if response.status_code == 200:
             return self.__decode_data(response.json())
         else:
@@ -66,25 +71,25 @@ class SenecAPI():
         return value
 
     def __substitute_system_state(self, data):
-        system_state = data['STATISTIC']['CURRENT_STATE']
+        system_state = data['ENERGY']['STAT_STATE']
         #auskommentiert, bis die anzahl der Status bekannt ist:
         try:
-            data['STATISTIC']['CURRENT_STATE'] = SYSTEM_STATE_NAME[system_state]
+            data['ENERGY']['STAT_STATE'] = SYSTEM_STATE_NAME[system_state]
         except Exception:
-            pass
+            data['ENERGY']['STAT_STATE'] = "unbekannt"
         return data
 
 BASIC_REQUEST = {
-    'STATISTIC': {
-        'CURRENT_STATE': '',  # Current state of the system (int, see SYSTEM_STATE_NAME)            "Keller/Solar/SystemStatus"
-        'LIVE_BAT_CHARGE_MASTER': '',  # Battery charge amount since installation (kWh)             "Keller/Solar/BatEnergyCharge"
-        'LIVE_BAT_DISCHARGE_MASTER': '',  # Battery discharge amount since installation (kWh)       "Keller/Solar/BatEnergyDischarge"
-        'LIVE_GRID_EXPORT': '',  # Grid export amount since installation (kWh)                      "Keller/Solar/GridEnergyOut"
-        'LIVE_GRID_IMPORT': '',  # Grid import amount since installation (kWh)                      "Keller/Solar/GridEnergyIn"
-        'LIVE_HOUSE_CONS': '',  # House consumption since installation (kWh)                        "Keller/Solar/HouseEnergy"
-        'LIVE_PV_GEN': '',  # PV generated power since installation (kWh)                           "Keller/Solar/SolarEnergy"
-        'MEASURE_TIME': ''  # Unix timestamp for above values (ms)                                  "Keller/Solar/TimeStamp"
-    },
+    #'STATISTIC': {
+    #    'CURRENT_STATE': '',  # Current state of the system (int, see SYSTEM_STATE_NAME)            "Keller/Solar/SystemStatus"
+    #    'LIVE_BAT_CHARGE_MASTER': '',  # Battery charge amount since installation (kWh)             "Keller/Solar/BatEnergyCharge"
+    #    'LIVE_BAT_DISCHARGE_MASTER': '',  # Battery discharge amount since installation (kWh)       "Keller/Solar/BatEnergyDischarge"
+    #    'LIVE_GRID_EXPORT': '',  # Grid export amount since installation (kWh)                      "Keller/Solar/GridEnergyOut"
+    #    'LIVE_GRID_IMPORT': '',  # Grid import amount since installation (kWh)                      "Keller/Solar/GridEnergyIn"
+    #    'LIVE_HOUSE_CONS': '',  # House consumption since installation (kWh)                        "Keller/Solar/HouseEnergy"
+    #    'LIVE_PV_GEN': '',  # PV generated power since installation (kWh)                           "Keller/Solar/SolarEnergy"
+    #    'MEASURE_TIME': ''  # Unix timestamp for above values (ms)                                  "Keller/Solar/TimeStamp"
+    #},
     'ENERGY': {
         'GUI_BAT_DATA_CURRENT': '',  # Battery charge current: negative if discharging, positiv if charging (A)     "Keller/Solar/BatCurrent"
         'GUI_BAT_DATA_FUEL_CHARGE': '',  # Remaining battery (percent)                                              "Keller/Solar/SOC"
@@ -93,7 +98,8 @@ BASIC_REQUEST = {
         'GUI_GRID_POW': '',  # Grid power: negative if exporting, positiv if importing (W)                          "Keller/Solar/GridPower"
         'GUI_HOUSE_POW': '',  # House power consumption (W)                                                         "Keller/Solar/HousePower"
         'GUI_INVERTER_POWER': '',  # PV production (W)                                                              "Keller/Solar/SolarPower"
-        'STAT_HOURS_OF_OPERATION': ''  # Appliance hours of operation                                               "Keller/Solar/OpHours"
+        'STAT_HOURS_OF_OPERATION': '',  # Appliance hours of operation                                               "Keller/Solar/OpHours"
+        'STAT_STATE': '' #alt: current state Current state of the system (int, see SYSTEM_STATE_NAME)              "Keller/Solar/SystemStatus"
     },
     'PV1': {
         'POWER_RATIO': '',  # Grid export limit (percent)                                                           "Keller/Solar/GritLimit"
@@ -121,9 +127,9 @@ SYSTEM_STATE_NAME = {
     10: "FULL CHARGE",
     11: "EQUALIZATION: CHARGE",
     12: "DESULFATATION: CHARGE",
-    13: "BATTERY GELADEN",
+    13: "BATTERIE GELADEN",
     14: "LADEN",
-    15: "BATTERY LEER",
+    15: "BATTERIE LEER",
     16: "ENTLADEN",
     17: "PV + ENTLADEN",
     18: "NETZ + ENTLADEN",

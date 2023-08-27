@@ -55,15 +55,20 @@ while True:
     try:
         #get Data from Senec
         data_dict = info.get_values()
+        #data_dict = info.get_all_values()
+        #print(data_dict)
+    except:
+        print("info.get_values() ging nicht")
+    try:
         #Statistic
-        client.publish("Keller/Solar/SystemStatus", data_dict['STATISTIC']['CURRENT_STATE'])                    # Battery status
-        client.publish("Keller/Solar/BatEnergyCharge", data_dict['STATISTIC']['LIVE_BAT_CHARGE_MASTER'])        # Battery charge amount since installation (kWh)
-        client.publish("Keller/Solar/BatEnergyDischarge", data_dict['STATISTIC']['LIVE_BAT_DISCHARGE_MASTER'])  # Battery discharge amount since installation (kWh)
-        client.publish("Keller/Solar/GridEnergyOut", data_dict['STATISTIC']['LIVE_GRID_EXPORT'])                # Grid export amount since installation (kWh)
-        client.publish("Keller/Solar/GridEnergyIn", data_dict['STATISTIC']['LIVE_GRID_IMPORT'])                 # Grid import amount since installation (kWh)
-        client.publish("Keller/Solar/HouseEnergy", data_dict['STATISTIC']['LIVE_HOUSE_CONS'])                   # House consumption since installation (kWh)
-        client.publish("Keller/Solar/SolarEnergy", data_dict['STATISTIC']['LIVE_PV_GEN'])                       # PV generated power since installation (kWh)
-        client.publish("Keller/Solar/TimeStamp", data_dict['STATISTIC']['MEASURE_TIME'])                        # Unix timestamp for above values (ms)
+        #client.publish("Keller/Solar/SystemStatus", data_dict['STATISTIC']['CURRENT_STATE'])                    # Battery status
+        #client.publish("Keller/Solar/BatEnergyCharge", data_dict['STATISTIC']['LIVE_BAT_CHARGE_MASTER'])        # Battery charge amount since installation (kWh)
+        #client.publish("Keller/Solar/BatEnergyDischarge", data_dict['STATISTIC']['LIVE_BAT_DISCHARGE_MASTER'])  # Battery discharge amount since installation (kWh)
+        #client.publish("Keller/Solar/GridEnergyOut", data_dict['STATISTIC']['LIVE_GRID_EXPORT'])                # Grid export amount since installation (kWh)
+        #client.publish("Keller/Solar/GridEnergyIn", data_dict['STATISTIC']['LIVE_GRID_IMPORT'])                 # Grid import amount since installation (kWh)
+        #client.publish("Keller/Solar/HouseEnergy", data_dict['STATISTIC']['LIVE_HOUSE_CONS'])                   # House consumption since installation (kWh)
+        #client.publish("Keller/Solar/SolarEnergy", data_dict['STATISTIC']['LIVE_PV_GEN'])                       # PV generated power since installation (kWh)
+        #client.publish("Keller/Solar/TimeStamp", data_dict['STATISTIC']['MEASURE_TIME'])                        # Unix timestamp for above values (ms)
 
         #Energy
         client.publish("Keller/Solar/BatCurrent", data_dict['ENERGY']['GUI_BAT_DATA_CURRENT'])                  # Battery charge current: negative if discharging, positiv if charging (A)
@@ -74,6 +79,7 @@ while True:
         client.publish("Keller/Solar/HousePower", data_dict['ENERGY']['GUI_HOUSE_POW'])                         # House power consumption (W)
         client.publish("Keller/Solar/SolarPower", data_dict['ENERGY']['GUI_INVERTER_POWER'])                    # PV production (W)
         client.publish("Keller/Solar/OpHours", data_dict['ENERGY']['STAT_HOURS_OF_OPERATION'])                  # Appliance hours of operation
+        client.publish("Keller/Solar/SystemStatus", data_dict['ENERGY']['STAT_STATE'])                          # war in Statistic Battery status
 
         #PV1
         client.publish("Keller/Solar/GridLimit", data_dict['PV1']['POWER_RATIO'])                               # Grid export limit (percent)
@@ -92,6 +98,6 @@ while True:
 
         client.publish("Keller/Solar/UpdateIntervall", intervall)
     except:
-        print("da ging was schief, später nochmal probieren")
+        print("publishen ging nicht")
 
     time.sleep(intervall)
