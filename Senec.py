@@ -11,6 +11,8 @@ Kudos:
 """
 import requests
 import struct
+import SENEC2MQTT_logging  # Importieren Sie den Handler aus Ihrer Konfiguration
+logger = SENEC2MQTT_logging.logger  # Erstellen Sie einen Logger
 
 requests.packages.urllib3.disable_warnings(
     requests.packages.urllib3.exceptions.InsecureRequestWarning)
@@ -31,13 +33,16 @@ class SenecAPI():
         self.read_api  = f"https://{device_ip}/lala.cgi"
 
     def get_values(self):
+        logger.debug('begin get_values in Senec.py')
         response = requests.post(self.read_api, json=BASIC_REQUEST, verify=False)
+        logger.debug(f'response from {self.read_api}: {response}')
         if response.status_code == 200:
             #return self.__decode_data(response.json())
             res = self.__decode_data(response.json())
             #print(res)
             return self.__substitute_system_state(res)
         else:
+            logger.error(f"get_values() returns status code: {response.status_code}")
             return {"msg": f"Status code {response.status_code}"}
 
     def get_all_values(self):
