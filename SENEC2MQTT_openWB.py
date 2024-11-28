@@ -31,10 +31,14 @@ def on_connect(client, userdata, flags, rc):
 
 
 # The callback for when a PUBLISH message is received from the server.
-def on_message(client, userdata, msg):
+
+def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received from the server.
     if msg.topic == "Keller/Solar/control/SENEC2MQTTInterval":
-        q.put(int(msg.payload.decode("utf-8")))
-        print("Intervall vom MQTT: " + str(msg.payload.decode("utf-8")))
+        try:
+            q.put(int(msg.payload.decode("utf-8")))
+            print("Intervall vom MQTT: " + str(msg.payload.decode("utf-8")))
+        except:
+            print("not an int")
 
 
 client = mqtt.Client("SENEC-openWB-bridge")
@@ -54,10 +58,14 @@ while True:
 
     while not q.empty():
         intervall = q.get()
+        if intervall <= 1: intervall = 1
+        if intervall >= 60: intervall = 60
     try:
         # get Data from Senec
         data_dict = info.get_values()
-
+    except:
+        print("info.get_values() ging nicht")
+    try:
         # openWB PV-Modul
         # PV-Leistung in W, int, positiv
         client.publish("openWB/set/pv/1/W", int(data_dict['ENERGY']['GUI_INVERTER_POWER']))
@@ -136,7 +144,7 @@ while True:
 
         # PV1
         # Grid export limit (percent)
-        client.publish("Keller/Solar/GridLimit", data_dict['PV1']['POWER_RATIO'])
+        # client.publish("Keller/Solar/GridLimit", data_dict['PV1']['POWER_RATIO'])
 
         client.publish("Keller/Solar/UpdateIntervall", intervall)
     except:
