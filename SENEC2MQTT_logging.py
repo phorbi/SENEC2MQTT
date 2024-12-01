@@ -1,6 +1,6 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
-log_file_name = '/home/server/_input/SenecLog.log'
+log_file_name = 'SenecLog.log'
 logging_level = logging.DEBUG
 
 # set TimedRotatingFileHandler for root
