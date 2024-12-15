@@ -56,11 +56,10 @@ client.connect(BROKER_IP, BROKER_PORT) #connect to broker
 q=Queue() # we use a queue to get date from the on_message callback to the main
 intervall = 5
 
+# connect to Senec
+info = Senec.SenecAPI(SENEC_IP)
 
-#connect to Senec
-info =Senec.SenecAPI(SENEC_IP)
-
-#go on forever
+# go on forever
 client.loop_start()
 while True:
 
