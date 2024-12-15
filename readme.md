@@ -16,7 +16,7 @@ https://pypi.org/project/requests/
 <code>python3 -m pip install requests</code>
 
 
-Es gibt zwei Pyhon Skripte.
+Es gibt drei Pyhon Skripte.
 Senec.py hat den Ursprung hier:  
 https://inden.one/blog/2020/11/26/senec-python-library.html  
 Und dient dazu, ähnlich wie bei dem HTTPMod Modul die Daten über HTTP beim Speicher anzufragen. Ich habe es leicht modifiziert und meinen Bedürfnissen angepasst.
@@ -25,8 +25,9 @@ Und dient dazu, ähnlich wie bei dem HTTPMod Modul die Daten über HTTP beim Spe
 SENEC2MQTT.py sendet die vom Senec bekommenen Daten auf dem MQTT Broker.
 MQTT Broker, sowie SENEC Adresse müssen dort zunächst entsprechend in Zeile 20-23 vorkonfiguriert werden.
 
+SENEC2MQTT_logging.py ist ein handler für logging. Darin könnt müsst ihr noch das Verzeichnis für den output von logfiles festlegen.
 
-- Ich habe die beiden Skripte bei mir auf meinem FHEM Server (debian) unter <code>/usr/bin/SENEC2MQTT</code>abgelegt
+- Ich habe die Skripte bei mir auf meinem FHEM Server (debian) unter <code>/usr/bin/SENEC2MQTT</code>abgelegt
 - Ich habe die Dateien executable gemacht (hier bin ich wie gewohnt mit der bazooka vorgegangen):   
 <code>
 sudo chmod 777 /usr/bin/SENEC2MQTT/Senec.py  

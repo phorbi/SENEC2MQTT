@@ -17,28 +17,44 @@ import paho.mqtt.client as mqtt
 import Senec
 from queue import Queue
 
+import SENEC2MQTT_logging  # Importieren Sie den Handler aus Ihrer Konfiguration
+logger = SENEC2MQTT_logging.logger  # Erstellen Sie einen Logger
+
 BROKER_IP = "192.168.10.100"
 BROKER_PORT = 1883
 SENEC_IP = "192.168.10.65"
 
 def on_connect(client, userdata, flags, rc):  # The callback for when the client connects to the broker
+    logger.info('connected to broker')
     print("Connected with result code {0}".format(str(rc)))  # Print result of connection attempt
     client.subscribe("Keller/Solar/control/SENEC2MQTTInterval")  # Subscribe to the topic
 
 def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received from the server.
     if msg.topic == "Keller/Solar/control/SENEC2MQTTInterval":
+        logger.info(f'message from {msg.topic}')
         try:
             q.put(int(msg.payload.decode("utf-8")))
             print("Intervall vom MQTT: " + str(msg.payload.decode("utf-8")))
+            logger.info(f'Intervall vom MQTT: {str(msg.payload.decode("utf-8"))} Sekunden')
         except:
+            logger.error(f'Payload for {msg.topic} is not an int')
             print("not an int")
 
+def on_disconnect(client, userdata, rc):
+    logger.info(f'disconnected from MQTT Broker {BROKER_IP}:{BROKER_PORT}, reconnecting')
+    client.connect(BROKER_IP, BROKER_PORT)
+
 client =mqtt.Client("SENEC-V3")
+
 client.on_connect = on_connect  # Define callback function for successful connection
 client.on_message = on_message  # Define callback function for receipt of a message
+client.on_disconnect = on_disconnect # Define callback function for desiconnection handling
+
+logger.info(f'connecting to MQTT Broker: {BROKER_IP}:{BROKER_PORT}')
 client.connect(BROKER_IP, BROKER_PORT) #connect to broker
+
 q=Queue() # we use a queue to get date from the on_message callback to the main
-intervall = 2
+intervall = 5
 
 
 #connect to Senec
@@ -54,12 +70,14 @@ while True:
         if intervall >= 60: intervall = 60
     try:
         #get Data from Senec
+        logger.debug('begin try get_values()')
         data_dict = info.get_values()
         #data_dict = info.get_all_values()
-        #print(data_dict)
+        logger.debug(f'get_values returned: {data_dict}')
     except:
-        print("info.get_values() ging nicht")
+        logger.error('get_values() ging nicht')
     try:
+        logger.debug('begin publish')
         #Statistic
         #client.publish("Keller/Solar/SystemStatus", data_dict['STATISTIC']['CURRENT_STATE'])                    # Battery status
         #client.publish("Keller/Solar/BatEnergyCharge", data_dict['STATISTIC']['LIVE_BAT_CHARGE_MASTER'])        # Battery charge amount since installation (kWh)
@@ -98,6 +116,6 @@ while True:
 
         client.publish("Keller/Solar/UpdateIntervall", intervall)
     except:
-        print("publishen ging nicht")
-
+        logger.error('publish fehlgeschlagen')
+    logger.debug(f'begin sleeping for {intervall} seconds')
     time.sleep(intervall)
