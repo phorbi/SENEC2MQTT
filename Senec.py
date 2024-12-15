@@ -34,8 +34,13 @@ class SenecAPI():
 
     def get_values(self):
         logger.debug('begin get_values in Senec.py')
-        response = requests.post(self.read_api, json=BASIC_REQUEST, verify=False)
-        logger.debug(f'response from {self.read_api}: {response}')
+        try:
+            response = requests.post(self.read_api, json=BASIC_REQUEST, verify=False, timeout=10)
+            logger.debug(f'response from {self.read_api}: {response}')
+        except requests.exceptions.ConnectionError as ce:
+            logger.error(f"connection error with: {ce}" )
+        except requests.exceptions.Timeout:
+            logger.error("request Timout")
         if response.status_code == 200:
             #return self.__decode_data(response.json())
             res = self.__decode_data(response.json())
