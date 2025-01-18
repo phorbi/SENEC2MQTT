@@ -24,7 +24,7 @@ BROKER_IP = "192.168.10.100"
 BROKER_PORT = 1883
 SENEC_IP = "192.168.10.65"
 
-def on_connect(client, userdata, flags, rc):  # The callback for when the client connects to the broker
+def on_connect(client, userdata, flags, rc, properties=None):  # The callback for when the client connects to the broker
     logger.info('connected to broker')
     print("Connected with result code {0}".format(str(rc)))  # Print result of connection attempt
     client.subscribe("Keller/Solar/control/SENEC2MQTTInterval")  # Subscribe to the topic
@@ -40,11 +40,11 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
             logger.error(f'Payload for {msg.topic} is not an int')
             print("not an int")
 
-def on_disconnect(client, userdata, rc):
+def on_disconnect(client, userdata, rc, properties=None):
     logger.info(f'disconnected from MQTT Broker {BROKER_IP}:{BROKER_PORT}, reconnecting')
     client.connect(BROKER_IP, BROKER_PORT)
 
-client =mqtt.Client(mqtt.CallbackAPIVersion.VERSION1,"SENEC-V3")
+client =mqtt.Client(mqtt.CallbackAPIVersion.VERSION2,"SENEC-V3")
 
 client.on_connect = on_connect  # Define callback function for successful connection
 client.on_message = on_message  # Define callback function for receipt of a message
