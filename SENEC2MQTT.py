@@ -44,7 +44,7 @@ def on_disconnect(client, userdata, rc):
     logger.info(f'disconnected from MQTT Broker {BROKER_IP}:{BROKER_PORT}, reconnecting')
     client.connect(BROKER_IP, BROKER_PORT)
 
-client =mqtt.Client("SENEC-V3")
+client =mqtt.Client(mqtt.CallbackAPIVersion.VERSION1,"SENEC-V3")
 
 client.on_connect = on_connect  # Define callback function for successful connection
 client.on_message = on_message  # Define callback function for receipt of a message
