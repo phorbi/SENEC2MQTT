@@ -10,7 +10,8 @@ https://mosquitto.org/download/
 <code>sudo apt install python3</code>
 - Es werden folgende libraries/packages gebraucht:   
 https://pypi.org/project/paho-mqtt  
-<code>python3 -m pip install paho-mqtt</code>  
+<code>python3 -m pip install paho-mqtt</code>
+Hinweis: Es muss eine paho Version >2.0.0 verwendet werden!
 und  
 https://pypi.org/project/requests/  
 <code>python3 -m pip install requests</code>
